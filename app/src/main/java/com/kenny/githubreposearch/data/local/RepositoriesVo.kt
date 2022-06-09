@@ -5,20 +5,21 @@ import androidx.annotation.Keep
 @Keep
 data class RepositoriesVo(
     val incompleteResults: Boolean,
-    val repositories: List<Repository>,
+    val repositories: List<RepoDateVo>,
     val totalCount: Int
 )
 
 @Keep
-data class Repository(
+data class RepoDateVo(
     val repositoryName: String,
     val startCount: Int,
     val forkCount: Int,
-    val description: String,
+    val description: String?,
     val license: LicenseVo?,
     val tags: List<Tag>?,
     val authorAvatar: String?,
-    val authorName: String
+    val authorName: String,
+    val id: Int
 )
 
 @Keep

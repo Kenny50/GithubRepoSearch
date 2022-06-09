@@ -10,6 +10,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -21,12 +23,20 @@ object AppModule {
     @Provides
     @Singleton
     fun provideGithubService(): GithubServiceApi {
+        val okHttpClient = OkHttpClient.Builder().apply {
+            if (BuildConfig.DEBUG) {
+                val loggingInterceptor = HttpLoggingInterceptor()
+                loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+                this.addInterceptor(interceptor = loggingInterceptor)
+            }
+        }.build()
         val gson: Gson = GsonBuilder()
             .setLenient()
             .create()
 
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
+            .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(GithubServiceApi::class.java)

@@ -1,7 +1,7 @@
 import androidx.annotation.Keep
 import com.kenny.githubreposearch.data.local.LicenseVo
+import com.kenny.githubreposearch.data.local.RepoDateVo
 import com.kenny.githubreposearch.data.local.RepositoriesVo
-import com.kenny.githubreposearch.data.local.Repository
 import com.kenny.githubreposearch.data.local.Tag
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -60,7 +60,7 @@ data class Item(
     @SerialName("deployments_url")
     val deploymentsUrl: String,
     @SerialName("description")
-    val description: String,
+    val description: String?,
     @SerialName("disabled")
     val disabled: Boolean,
     @SerialName("downloads_url")
@@ -184,8 +184,8 @@ data class Item(
     @SerialName("watchers_count")
     val watchersCount: Int
 ) {
-    fun toRepository() =
-        Repository(
+    fun toRepository(): RepoDateVo {
+        return RepoDateVo(
             repositoryName = name,
             startCount = stargazersCount,
             forkCount = forksCount,
@@ -193,8 +193,11 @@ data class Item(
             license = license?.toLicenseVo(),
             tags = topics?.map { Tag(it) },
             authorAvatar = owner.avatarUrl,
-            authorName = owner.login
+            authorName = owner.login,
+            id = id
         )
+    }
+
 }
 
 @Keep

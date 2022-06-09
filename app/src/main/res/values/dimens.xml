@@ -1,3 +1,4 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="row_item_margin_vertical">12dp</dimen>
 </resources>
