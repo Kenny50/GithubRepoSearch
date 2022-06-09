@@ -2,4 +2,7 @@
     <string name="app_name">GithubRepoSearch</string>
 
     <string name="search_hint">Search</string>
+    <string name="retry">retry</string>
+    <string name="no_results">it seems there is no result, please try other keyword</string>
+    <string name="please_type">please type for result</string>
 </resources>
