@@ -6,6 +6,7 @@ import com.kenny.githubreposearch.BuildConfig
 import com.kenny.githubreposearch.data.remote.GithubServiceApi
 import com.kenny.githubreposearch.data.repository.GithubRepositoryImpl
 import com.kenny.githubreposearch.domain.repository.GithubRepository
+import com.kenny.githubreposearch.util.Constant
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,6 +29,13 @@ object AppModule {
                 val loggingInterceptor = HttpLoggingInterceptor()
                 loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
                 this.addInterceptor(interceptor = loggingInterceptor)
+            }
+            addInterceptor { chain ->
+                val url = chain.request().url.newBuilder()
+                    .addQueryParameter(Constant.CLIENT_ID, BuildConfig.CLIENT_ID)
+                    .addQueryParameter(Constant.CLIENT_SECRET, BuildConfig.CLIENT_SECRET)
+                    .build()
+                chain.proceed(chain.request().newBuilder().url(url).build())
             }
         }.build()
         val gson: Gson = GsonBuilder()
