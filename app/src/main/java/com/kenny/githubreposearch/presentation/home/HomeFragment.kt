@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.RecyclerView
@@ -55,17 +56,18 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>() {
             onQueryChange = uiAction
         )
         bindList(
+            pagingData = pagingData,
+        )
+        bindScrollAction(
             adapter = pagingAdapter,
             uiState = uiState,
-            pagingData = pagingData,
             onScrollChange = uiAction
         )
     }
 
-    private fun FragmentHomeBinding.bindList(
+    private fun FragmentHomeBinding.bindScrollAction(
         adapter: RepositoriesPagingAdapter,
         uiState: StateFlow<UiState>,
-        pagingData: Flow<PagingData<RepoDateVo>>,
         onScrollChange: (UiAction.Scroll) -> Unit
     ) {
         rvRepository.addOnScrollListener(
@@ -84,6 +86,7 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>() {
             .map { it.hasNotScrolledForCurrentSearch }
             .distinctUntilChanged()
 
+        //當 adapter沒在載入，且當用戶搜尋了新值，表示用戶沒在滾動列表
         val shouldScrollToTop = combine(
             notLoading,
             hasNotScrollForCurrentState,
@@ -91,43 +94,55 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>() {
         ).distinctUntilChanged()
 
         lifecycleScope.launch {
-            pagingData.collectLatest { pagingAdapter.submitData(it) }
-        }
-        lifecycleScope.launch {
             shouldScrollToTop.collect { shouldScroll ->
                 if (shouldScroll) rvRepository.scrollToPosition(0)
             }
         }
+    }
+
+    private fun FragmentHomeBinding.bindList(
+        pagingData: Flow<PagingData<RepoDateVo>>,
+    ) {
+        lifecycleScope.launch {
+            pagingData.collectLatest { pagingAdapter.submitData(it) }
+        }
         lifecycleScope.launch {
             pagingAdapter.loadStateFlow.collect { loadState ->
-                val isListEmpty =
-                    loadState.refresh is LoadState.NotLoading && pagingAdapter.itemCount == 0
-                // show empty list
-                noResult.isVisible = isListEmpty
-                typePrompt.isVisible = isListEmpty
-                // Only show the list if refresh succeeds.
-                rvRepository.isVisible = !isListEmpty
-                // Show loading spinner during initial load or refresh.
-                progressBar.isVisible = loadState.source.refresh is LoadState.Loading
-                // Show the retry state if initial load or refresh fails.
-                retryButton.isVisible = loadState.source.refresh is LoadState.Error
-
-
+                bindUiWithLoadStateFlow(loadState)
                 // Toast on any error, regardless of whether it came from RemoteMediator or PagingSource
-                val errorState = loadState.source.append as? LoadState.Error
-                    ?: loadState.source.prepend as? LoadState.Error
-                    ?: loadState.append as? LoadState.Error
-                    ?: loadState.prepend as? LoadState.Error
-                errorState?.let {
-                    Toast.makeText(
-                        requireContext(),
-                        "\uD83D\uDE28 Wooops ${it.error}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+                errorToaster(loadState)
             }
         }
 
+    }
+
+    private fun errorToaster(loadState: CombinedLoadStates) {
+        val errorState = loadState.source.append as? LoadState.Error
+            ?: loadState.source.prepend as? LoadState.Error
+            ?: loadState.append as? LoadState.Error
+            ?: loadState.prepend as? LoadState.Error
+        errorState?.let {
+            Toast.makeText(
+                requireContext(),
+                "\uD83D\uDE28 Wooops ${it.error}",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun FragmentHomeBinding.bindUiWithLoadStateFlow(loadState: CombinedLoadStates) {
+        val isListEmpty =
+            loadState.refresh is LoadState.NotLoading && pagingAdapter.itemCount == 0
+        // show no result list
+        noResult.isVisible = isListEmpty
+        // show prompt hint
+        typePrompt.isVisible = isListEmpty && etQueryInput.text.isBlank()
+        // Only show the list if refresh succeeds.
+        rvRepository.isVisible = loadState.source.refresh is LoadState.NotLoading
+        // Show loading spinner during initial load or refresh.
+        progressBar.isVisible = loadState.source.refresh is LoadState.Loading
+        // Show the retry state if initial load or refresh fails.
+        retryButton.isVisible = loadState.source.refresh is LoadState.Error
     }
 
     private fun FragmentHomeBinding.bindSearch(
@@ -178,7 +193,6 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>() {
         }
 
         binding.retryButton.setOnClickListener { pagingAdapter.retry() }
-
     }
 
 }

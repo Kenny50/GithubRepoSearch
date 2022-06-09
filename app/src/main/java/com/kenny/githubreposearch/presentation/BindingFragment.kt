@@ -29,9 +29,5 @@ abstract class BindingFragment<out T : ViewBinding>() : Fragment() {
         _binding = null
     }
 
-    fun clearBindingByDevelop() {
-        _binding = null
-    }
-
     protected abstract val bindingInflater: (LayoutInflater) -> ViewBinding
 }
