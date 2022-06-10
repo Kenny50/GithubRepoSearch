@@ -101,4 +101,13 @@ dependencies {
 
     //recyclerview state restoration policy
     implementation "androidx.recyclerview:recyclerview:1.2.1"
+
+
+
+    //test
+    //coroutine Test
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.2'
+
+    //kotlin test
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:1.6.21"
 }

@@ -13,6 +13,7 @@ class SearchRepositoriesUseCase @Inject constructor(
     operator fun invoke(q: String) = Pager(
         PagingConfig(
             pageSize = Constant.DEFAULT_PAGE_SIZE,
+            enablePlaceholders = false,
             initialLoadSize = 2 * Constant.DEFAULT_PAGE_SIZE
         )
     ) {
