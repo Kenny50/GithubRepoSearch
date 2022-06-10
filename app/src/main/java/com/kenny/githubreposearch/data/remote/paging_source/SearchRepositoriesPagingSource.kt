@@ -10,10 +10,26 @@ import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
 
+/**
+ * Generate a Paging source for each github repositories search.
+ *
+ * @property repository provide the api request method
+ * @property query the keyword pass to api request
+ */
 class SearchRepositoriesPagingSource(
     private val repository: GithubRepository,
     private val query: String
 ) : PagingSource<Int, RepoDateVo>() {
+
+    /**
+     * Load api request.
+     *
+     * According to github document, the max amount of repositories is 100 on each request,
+     * therefore the first request will ask for 100 data, after that, each request will call for 50
+     *
+     * @param params default params
+     * @return LoadResult.Page while success else LoadResult.Error
+     */
     override suspend fun load(
         params: LoadParams<Int>
     ): LoadResult<Int, RepoDateVo> {
@@ -34,6 +50,12 @@ class SearchRepositoriesPagingSource(
         }
     }
 
+    /**
+     * Get the right key while recyclerview scroll.
+     *
+     * @param state default params
+     * @return key
+     */
     override fun getRefreshKey(state: PagingState<Int, RepoDateVo>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             val anchorPage = state.closestPageToPosition(anchorPosition)
