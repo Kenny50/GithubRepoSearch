@@ -138,9 +138,10 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>() {
         // show prompt hint
         typePrompt.isVisible = isListEmpty && etQueryInput.text.isBlank()
         // Only show the list if refresh succeeds.
-        rvRepository.isVisible = loadState.source.refresh is LoadState.NotLoading
+        rvRepository.isVisible = !isListEmpty
         // Show loading spinner during initial load or refresh.
         progressBar.isVisible = loadState.source.refresh is LoadState.Loading
+        rvRepository.alpha = if (loadState.source.refresh is LoadState.Loading) 0.5f else 1f
         // Show the retry state if initial load or refresh fails.
         retryButton.isVisible = loadState.source.refresh is LoadState.Error
     }
