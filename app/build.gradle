@@ -26,8 +26,7 @@ android {
     buildTypes {
         debug {
             buildConfigField("String", "BASE_URL", properties['test.base.url'])
-            buildConfigField("String", "CLIENT_ID", properties['test.client.id'])
-            buildConfigField("String", "CLIENT_SECRET", properties['test.client.secret'])
+            buildConfigField("String", "CLIENT_TOKEN", properties['test.client.token'])
         }
 
         release {
@@ -35,8 +34,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             buildConfigField("String", "BASE_URL", properties['release.base.url'])
-            buildConfigField("String", "CLIENT_ID", properties['release.client.id'])
-            buildConfigField("String", "CLIENT_SECRET", properties['release.client.secret'])
+            buildConfigField("String", "CLIENT_TOKEN", properties['release.client.token'])
         }
     }
     compileOptions {
