@@ -11,7 +11,10 @@ class SearchRepositoriesUseCase @Inject constructor(
     private val repository: GithubRepository,
 ) {
     operator fun invoke(q: String) = Pager(
-        PagingConfig(pageSize = Constant.DEFAULT_PAGE_SIZE)
+        PagingConfig(
+            pageSize = Constant.DEFAULT_PAGE_SIZE,
+            initialLoadSize = 2 * Constant.DEFAULT_PAGE_SIZE
+        )
     ) {
         SearchRepositoriesPagingSource(repository, q)
     }.flow

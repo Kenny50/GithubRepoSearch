@@ -7,6 +7,7 @@ interface GithubRepository {
     suspend fun searchRepositories(
         q: String,
         page: Int,
+        perPage: Int
     ): RepositoriesVo
 
 }
