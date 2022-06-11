@@ -9,6 +9,7 @@ import com.kenny.githubreposearch.data.remote.paging_source.UiAction
 import com.kenny.githubreposearch.data.remote.paging_source.UiState
 import com.kenny.githubreposearch.domain.use_case.SearchRepositoriesUseCase
 import com.kenny.githubreposearch.util.Constant.DEFAULT_QUERY
+import com.kenny.githubreposearch.util.paging.PagingStateHelper
 import com.kenny.githubreposearch.util.paging.PagingStateManagerImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -19,32 +20,18 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val searchRepositoriesUseCase: SearchRepositoriesUseCase,
     private val savedStateHandle: SavedStateHandle
-) : ViewModel() {
+) : ViewModel(), PagingStateHelper<RepoDateVo> {
 
-    /**
-     * Stream of immutable states representative of the UI.
-     */
-    val state: StateFlow<UiState>
-
-    val pagingDataFlow: Flow<PagingData<RepoDateVo>>
-
-    /**
-     * Processor of side effects from the UI which in turn feedback into [state]
-     */
-    val accept: (UiAction) -> Unit
+    private val pagingStateManager: PagingStateManagerImpl<RepoDateVo>
 
     init {
         val initialQuery: String = savedStateHandle.get(LAST_SEARCH_QUERY) ?: DEFAULT_QUERY
         val lastQueryScrolled: String = savedStateHandle.get(LAST_QUERY_SCROLLED) ?: DEFAULT_QUERY
 
-        PagingStateManagerImpl(
-            initialQuery, lastQueryScrolled, viewModelScope,
+        pagingStateManager = PagingStateManagerImpl(
+            initialQuery, lastQueryScrolled, viewModelScope
         ) { query ->
             searchRepositoriesUseCase(query)
-        }.let {
-            state = it.state
-            pagingDataFlow = it.pagingDataFlow
-            accept = it.accept
         }
     }
 
@@ -53,6 +40,15 @@ class HomeViewModel @Inject constructor(
         savedStateHandle[LAST_QUERY_SCROLLED] = state.value.lastQueryScrolled
         super.onCleared()
     }
+
+    override val state: StateFlow<UiState>
+        get() = pagingStateManager.state
+
+    override val pagingDataFlow: Flow<PagingData<RepoDateVo>>
+        get() = pagingStateManager.pagingDataFlow
+
+    override val accept: (UiAction) -> Unit
+        get() = pagingStateManager.accept
 }
 
 private const val LAST_QUERY_SCROLLED: String = "last_query_scrolled"
