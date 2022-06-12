@@ -24,12 +24,16 @@ android {
 
     buildTypes {
         debug {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
             buildConfigField("String", "BASE_URL", properties['test.base.url'])
             buildConfigField("String", "CLIENT_TOKEN", properties['test.client.token'])
         }
 
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             buildConfigField("String", "BASE_URL", properties['release.base.url'])
@@ -97,7 +101,6 @@ dependencies {
 
     //recyclerview state restoration policy
     implementation "androidx.recyclerview:recyclerview:1.2.1"
-
 
 
     //test

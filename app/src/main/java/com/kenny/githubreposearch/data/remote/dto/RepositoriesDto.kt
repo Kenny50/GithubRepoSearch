@@ -1,11 +1,11 @@
-import androidx.annotation.Keep
+package com.kenny.githubreposearch.data.remote.dto
+
 import com.google.gson.annotations.SerializedName
 import com.kenny.githubreposearch.data.local.LicenseVo
 import com.kenny.githubreposearch.data.local.RepoDateVo
 import com.kenny.githubreposearch.data.local.RepositoriesVo
 import com.kenny.githubreposearch.data.local.Tag
 
-@Keep
 data class RepositoriesDto(
     @SerializedName("incomplete_results")
     val incompleteResults: Boolean,
@@ -22,7 +22,6 @@ data class RepositoriesDto(
         )
 }
 
-@Keep
 data class Item(
     @SerializedName("allow_forking")
     val allowForking: Boolean,
@@ -199,7 +198,6 @@ data class Item(
 
 }
 
-@Keep
 data class Owner(
     @SerializedName("avatar_url")
     val avatarUrl: String?,
@@ -239,7 +237,6 @@ data class Owner(
     val url: String
 )
 
-@Keep
 data class Permissions(
     @SerializedName("admin")
     val admin: Boolean,
@@ -254,7 +251,6 @@ data class Permissions(
 )
 
 
-@Keep
 data class LicenseDto(
     @SerializedName("key")
     val key: String,

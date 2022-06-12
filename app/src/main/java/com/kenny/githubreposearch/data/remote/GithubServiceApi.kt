@@ -1,6 +1,6 @@
 package com.kenny.githubreposearch.data.remote
 
-import RepositoriesDto
+import com.kenny.githubreposearch.data.remote.dto.RepositoriesDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 
