@@ -182,7 +182,7 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>() {
 
 
     private fun setUi() {
-        pagingAdapter = RepositoriesPagingAdapter()
+        pagingAdapter = RepositoriesPagingAdapter(requireContext())
         pagingAdapter.stateRestorationPolicy =
             RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 

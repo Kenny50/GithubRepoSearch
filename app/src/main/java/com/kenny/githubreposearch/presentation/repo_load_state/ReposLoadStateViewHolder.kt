@@ -6,31 +6,32 @@ import androidx.core.view.isVisible
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
 import com.kenny.githubreposearch.R
-import com.kenny.githubreposearch.databinding.RepoLoadStateFooterItemBinding
+import com.kenny.githubreposearch.databinding.VhRepoLoadStateFooterItemBinding
 
-class ReposLoadStateViewHolder(
-    private val binding: RepoLoadStateFooterItemBinding,
+class ReposLoadStateViewHolder private constructor(
+    private val binding: VhRepoLoadStateFooterItemBinding,
     retry: () -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
-        binding.retryButton.setOnClickListener { retry.invoke() }
+        binding.btnRetry.setOnClickListener { retry.invoke() }
     }
 
     fun bind(loadState: LoadState) {
         if (loadState is LoadState.Error) {
-            binding.errorMsg.text = loadState.error.localizedMessage
+            binding.tvErrorMsg.text = loadState.error.localizedMessage
         }
-        binding.progressBar.isVisible = loadState is LoadState.Loading
-        binding.retryButton.isVisible = loadState is LoadState.Error
-        binding.errorMsg.isVisible = loadState is LoadState.Error
+        binding.pgsCircle.isVisible = loadState is LoadState.Loading
+        binding.btnRetry.isVisible = loadState is LoadState.Error
+        binding.tvErrorMsg.isVisible = loadState is LoadState.Error
     }
 
     companion object {
         fun create(parent: ViewGroup, retry: () -> Unit): ReposLoadStateViewHolder {
-            val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.repo_load_state_footer_item, parent, false)
-            val binding = RepoLoadStateFooterItemBinding.bind(view)
+            val binding = VhRepoLoadStateFooterItemBinding.bind(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.vh_repo_load_state_footer_item, parent, false)
+            )
             return ReposLoadStateViewHolder(binding, retry)
         }
     }

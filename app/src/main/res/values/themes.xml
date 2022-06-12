@@ -20,4 +20,20 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="Widget.MaterialComponents.CardView.VhRepo">
+        <item name="strokeColor">@color/primaryColor</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+    <style name="ImgRoundedCorner">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
+    </style>
+
+    <style name="ImgRoundedCorner.TopRightCorner">
+        <item name="cornerFamilyTopRight">rounded</item>
+        <item name="cornerSize">@dimen/card_corner_radius</item>
+        <item name="cornerSizeTopRight">40dp</item>
+    </style>
+
 </resources>
