@@ -17,7 +17,7 @@ data class RepositoriesDto(
     fun toRepositoriesVo() =
         RepositoriesVo(
             incompleteResults = this.incompleteResults,
-            repositories = items.map { it.toRepository() },
+            repositories = items.map { it.toRepoDataVo() },
             totalCount = totalCount
         )
 }
@@ -183,7 +183,7 @@ data class Item(
     @SerializedName("permissions")
     val permissions: Permissions?
 ) {
-    fun toRepository(): RepoDateVo {
+    fun toRepoDataVo(): RepoDateVo {
         return RepoDateVo(
             repositoryName = name,
             startCount = stargazersCount,
