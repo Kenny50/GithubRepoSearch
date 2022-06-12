@@ -53,7 +53,7 @@ class PagingStateManagerImpl<T : Any>(
     /**
      * Stream of immutable states representative of the UI.
      */
-    val state: StateFlow<UiState>
+    val state: Flow<UiState>
 
     val pagingDataFlow: Flow<PagingData<T>>
 
@@ -93,7 +93,7 @@ class PagingStateManagerImpl<T : Any>(
     private fun buildUiStateStateFlow(
         searches: Flow<UiAction.Search>,
         queriesScrolled: Flow<UiAction.Scroll>
-    ): StateFlow<UiState> {
+    ): Flow<UiState> {
         return combine(
             searches,
             queriesScrolled,
@@ -106,11 +106,6 @@ class PagingStateManagerImpl<T : Any>(
                 hasNotScrolledForCurrentSearch = search.query != scroll.currentQuery
             )
         }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
-                initialValue = UiState()
-            )
     }
 
     /**

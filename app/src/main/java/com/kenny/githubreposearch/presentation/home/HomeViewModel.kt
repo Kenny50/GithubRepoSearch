@@ -12,8 +12,7 @@ import com.kenny.githubreposearch.util.Constant.DEFAULT_QUERY
 import com.kenny.githubreposearch.util.paging.PagingStateHelper
 import com.kenny.githubreposearch.util.paging.PagingStateManagerImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,8 +24,8 @@ class HomeViewModel @Inject constructor(
     private val pagingStateManager: PagingStateManagerImpl<RepoDateVo>
 
     init {
-        val initialQuery: String = savedStateHandle.get(LAST_SEARCH_QUERY) ?: DEFAULT_QUERY
-        val lastQueryScrolled: String = savedStateHandle.get(LAST_QUERY_SCROLLED) ?: DEFAULT_QUERY
+        val initialQuery: String = savedStateHandle[LAST_SEARCH_QUERY] ?: DEFAULT_QUERY
+        val lastQueryScrolled: String = savedStateHandle[LAST_QUERY_SCROLLED] ?: DEFAULT_QUERY
 
         pagingStateManager = PagingStateManagerImpl(
             initialQuery, lastQueryScrolled, viewModelScope
@@ -35,14 +34,18 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    override fun onCleared() {
-        savedStateHandle[LAST_SEARCH_QUERY] = state.value.query
-        savedStateHandle[LAST_QUERY_SCROLLED] = state.value.lastQueryScrolled
-        super.onCleared()
+    override val state: StateFlow<UiState> by lazy {
+        pagingStateManager.state
+            .onEach {
+                savedStateHandle[LAST_SEARCH_QUERY] = it.query
+                savedStateHandle[LAST_QUERY_SCROLLED] = it.lastQueryScrolled
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
+                initialValue = UiState()
+            )
     }
-
-    override val state: StateFlow<UiState>
-        get() = pagingStateManager.state
 
     override val pagingDataFlow: Flow<PagingData<RepoDateVo>>
         get() = pagingStateManager.pagingDataFlow
