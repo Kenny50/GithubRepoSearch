@@ -11,9 +11,8 @@ import androidx.viewbinding.ViewBinding
 
 abstract class BindingFragment<out T : ViewBinding>() : Fragment() {
 
-    private var _binding: ViewBinding? = null
+    private var _binding: T? = null
 
-    @Suppress("UNCHECKED_CAST")
     protected val binding: T
         get() = _binding as T
 
@@ -23,7 +22,7 @@ abstract class BindingFragment<out T : ViewBinding>() : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = bindingInflater(inflater)
-        return _binding!!.root
+        return _binding?.root
     }
 
     override fun onDestroyView() {
@@ -37,5 +36,5 @@ abstract class BindingFragment<out T : ViewBinding>() : Fragment() {
         }
     }
 
-    protected abstract val bindingInflater: (LayoutInflater) -> ViewBinding
+    protected abstract val bindingInflater: (LayoutInflater) -> T
 }

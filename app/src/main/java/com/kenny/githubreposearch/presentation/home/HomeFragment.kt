@@ -13,7 +13,6 @@ import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewbinding.ViewBinding
 import com.kenny.githubreposearch.data.local.RepoDateVo
 import com.kenny.githubreposearch.data.remote.paging_source.UiAction
 import com.kenny.githubreposearch.data.remote.paging_source.UiState
@@ -29,7 +28,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class HomeFragment : BindingFragment<FragmentHomeBinding>() {
 
-    override val bindingInflater: (LayoutInflater) -> ViewBinding
+    override val bindingInflater: (LayoutInflater) -> FragmentHomeBinding
         get() = FragmentHomeBinding::inflate
 
     private val viewModel by viewModels<HomeViewModel>()
