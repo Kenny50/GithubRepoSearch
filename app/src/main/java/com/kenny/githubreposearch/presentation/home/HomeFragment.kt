@@ -134,16 +134,26 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>() {
         val isListEmpty =
             loadState.refresh is LoadState.NotLoading && pagingAdapter.itemCount == 0
         // show no result list
-        noResult.isVisible = isListEmpty
+        tvNoResult.isVisible = isListEmpty
+
         // show prompt hint
-        typePrompt.isVisible = isListEmpty && etQueryInput.text.isBlank()
+        tvTypePrompt.isVisible = isListEmpty && etQueryInput.text.isNullOrBlank()
+
         // Only show the list if refresh succeeds.
         rvRepository.isVisible = !isListEmpty
+
+        val refreshState = loadState.source.refresh
         // Show loading spinner during initial load or refresh.
-        progressBar.isVisible = loadState.source.refresh is LoadState.Loading
-        rvRepository.alpha = if (loadState.source.refresh is LoadState.Loading) 0.5f else 1f
+        pgsCircle.isVisible = refreshState is LoadState.Loading
+        rvRepository.alpha = if (refreshState is LoadState.Loading) 0.5f else 1f
+
         // Show the retry state if initial load or refresh fails.
-        retryButton.isVisible = loadState.source.refresh is LoadState.Error
+        btnRetry.isVisible = refreshState is LoadState.Error
+        tvErrorMsg.isVisible = refreshState is LoadState.Error
+        if (refreshState is LoadState.Error) {
+            tvErrorMsg.text = refreshState.error.localizedMessage
+            rvRepository.isVisible = false
+        }
     }
 
     private fun FragmentHomeBinding.bindSearch(
@@ -170,12 +180,9 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>() {
     private fun FragmentHomeBinding.updateRepoListFromInput(
         onQueryChanged: (UiAction.Search) -> Unit
     ) {
-        etQueryInput.text.trim().let {
-            if (it.isNotBlank()) {
+        etQueryInput.text?.trim().let {
+            if (!it.isNullOrBlank()) {
                 onQueryChanged(UiAction.Search(it.toString()))
-            } else {
-                typePrompt.isVisible = true
-                rvRepository.isVisible = false
             }
         }
     }
@@ -193,7 +200,7 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>() {
             )
         }
 
-        binding.retryButton.setOnClickListener { pagingAdapter.retry() }
+        binding.btnRetry.setOnClickListener { pagingAdapter.retry() }
     }
 
 }

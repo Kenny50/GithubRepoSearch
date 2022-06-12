@@ -6,6 +6,8 @@ import com.kenny.githubreposearch.data.local.RepoDateVo
 import com.kenny.githubreposearch.domain.repository.GithubRepository
 import com.kenny.githubreposearch.util.Constant
 import com.kenny.githubreposearch.util.Constant.DEFAULT_FIRST_PAGE_INDEX
+import com.kenny.githubreposearch.util.Constant.RATE_LIMIT_CODE_FOR_PUBLIC_READ_REQUEST
+import com.kenny.githubreposearch.util.Constant.RATE_LIMIT_MESSAGE
 import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
@@ -46,7 +48,10 @@ class SearchRepositoriesPagingSource(
         } catch (exception: IOException) {
             return LoadResult.Error(exception)
         } catch (exception: HttpException) {
-            return LoadResult.Error(exception)
+            return if (
+                exception.code() == RATE_LIMIT_CODE_FOR_PUBLIC_READ_REQUEST
+            ) LoadResult.Error(Exception(RATE_LIMIT_MESSAGE))
+            else LoadResult.Error(exception)
         }
     }
 

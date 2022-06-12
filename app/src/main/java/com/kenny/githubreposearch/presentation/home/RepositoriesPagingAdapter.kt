@@ -34,7 +34,7 @@ class RepositoriesPagingAdapter(
                 desc.text = description
                 author.text = context.resources.getString(R.string.author, authorName)
                 dvdTags.isVisible = !tags.isNullOrEmpty()
-                tagsGroup.isVisible = !tags.isNullOrEmpty()
+                tagsGroup.removeAllViews()
 
                 tags?.map {
                     Chip(context).apply { text = it.name }
