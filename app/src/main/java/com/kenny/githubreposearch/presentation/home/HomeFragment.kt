@@ -183,6 +183,7 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>() {
         etQueryInput.text?.trim().let {
             if (!it.isNullOrBlank()) {
                 onQueryChanged(UiAction.Search(it.toString()))
+                closeKeyboard()
             }
         }
     }
