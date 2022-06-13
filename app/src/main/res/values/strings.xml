@@ -7,4 +7,9 @@
     <string name="please_type">please type for result</string>
     <string name="author">Author: %s</string>
     <string name="time_out">Timeout</string>
+    <string name="enable_auto_search">enable auto search</string>
+
+    <string name="error_toast_message">\uD83D\uDE28 Wooops %s</string>
+    <string name="home">home</string>
+    <string name="setting">setting</string>
 </resources>

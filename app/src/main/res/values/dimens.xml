@@ -7,4 +7,5 @@
     <dimen name="card_view_items_space">5dp</dimen>
     <dimen name="vh_repo_title_size">50sp</dimen>
     <dimen name="divide_height">1dp</dimen>
+    <dimen name="setting_title">30sp</dimen>
 </resources>

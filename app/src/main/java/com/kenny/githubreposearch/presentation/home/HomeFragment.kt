@@ -13,17 +13,21 @@ import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.RecyclerView
+import com.kenny.githubreposearch.R
 import com.kenny.githubreposearch.data.local.RepoDateVo
 import com.kenny.githubreposearch.data.remote.paging_source.UiAction
 import com.kenny.githubreposearch.data.remote.paging_source.UiState
 import com.kenny.githubreposearch.databinding.FragmentHomeBinding
 import com.kenny.githubreposearch.presentation.BindingFragment
 import com.kenny.githubreposearch.presentation.repo_load_state.ReposLoadStateAdapter
+import com.kenny.githubreposearch.util.Constant.DEFAULT_AUTH_SEARCH_WAITING_TIME
+import com.kenny.githubreposearch.util.DataStoreManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : BindingFragment<FragmentHomeBinding>() {
@@ -34,6 +38,9 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>() {
     private val viewModel by viewModels<HomeViewModel>()
     private lateinit var pagingAdapter: RepositoriesPagingAdapter
     private var queryJob: Job? = null
+
+    @Inject
+    lateinit var dataStoreManager: DataStoreManager
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -123,7 +130,7 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>() {
         errorState?.let {
             Toast.makeText(
                 requireContext(),
-                "\uD83D\uDE28 Wooops ${it.error}",
+                getString(R.string.error_toast_message, it.error),
                 Toast.LENGTH_SHORT
             ).show()
         }
@@ -158,14 +165,18 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>() {
     private fun FragmentHomeBinding.bindSearch(
         onQueryChange: (UiAction.Search) -> Unit
     ) {
-
-        etQueryInput.doOnTextChanged { _, _, _, _ ->
-            queryJob?.cancel()
-            queryJob = lifecycleScope.launch {
-                delay(500)
-                updateRepoListFromInput(onQueryChange)
+        lifecycleScope.launch {
+            if (dataStoreManager.readAutoSearchEnable()) {
+                etQueryInput.doOnTextChanged { _, _, _, _ ->
+                    queryJob?.cancel()
+                    queryJob = lifecycleScope.launch {
+                        delay(DEFAULT_AUTH_SEARCH_WAITING_TIME)
+                        updateRepoListFromInput(onQueryChange)
+                    }
+                }
             }
         }
+
         etQueryInput.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 updateRepoListFromInput(onQueryChange)
