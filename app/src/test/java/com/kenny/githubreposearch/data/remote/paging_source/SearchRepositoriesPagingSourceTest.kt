@@ -57,7 +57,6 @@ class SearchRepositoriesPagingSourceTest {
                 prevKey = currentPage - 1,
                 nextKey = currentPage + 1
             ),
-            //our first call is (2 * DEFAULT_PAGE_SIZE) define in PagingConfig, therefore times 2 here as well
             actual = pagingSource.load(
                 PagingSource.LoadParams.Append(
                     key = currentPage,
@@ -85,7 +84,6 @@ class SearchRepositoriesPagingSourceTest {
                 prevKey = currentPage - 1,
                 nextKey = currentPage + 1
             ),
-            //our first call is (2 * DEFAULT_PAGE_SIZE) define in PagingConfig, therefore times 2 here as well
             actual = pagingSource.load(
                 PagingSource.LoadParams.Append(
                     key = currentPage,
