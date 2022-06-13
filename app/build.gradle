@@ -102,6 +102,9 @@ dependencies {
     //recyclerview state restoration policy
     implementation "androidx.recyclerview:recyclerview:1.2.1"
 
+    //data store
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+
 
     //test
     //coroutine Test

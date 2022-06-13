@@ -1,5 +1,6 @@
 package com.kenny.githubreposearch.di
 
+import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.kenny.githubreposearch.BuildConfig
@@ -7,9 +8,11 @@ import com.kenny.githubreposearch.data.remote.GithubServiceApi
 import com.kenny.githubreposearch.data.repository.GithubRepositoryImpl
 import com.kenny.githubreposearch.domain.repository.GithubRepository
 import com.kenny.githubreposearch.util.Constant.AUTHORIZATION
+import com.kenny.githubreposearch.util.DataStoreManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -55,5 +58,11 @@ object AppModule {
     @Singleton
     fun provideGithubRepository(api: GithubServiceApi): GithubRepository {
         return GithubRepositoryImpl(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDataStoreManager(@ApplicationContext context: Context): DataStoreManager {
+        return DataStoreManager(context)
     }
 }
