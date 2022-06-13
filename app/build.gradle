@@ -4,11 +4,13 @@ plugins {
 
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
-    id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.21'
 }
 
 android {
     compileSdk 32
+
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
     defaultConfig {
         applicationId "com.kenny.githubreposearch"
@@ -21,9 +23,21 @@ android {
     }
 
     buildTypes {
-        release {
-            minifyEnabled false
+        debug {
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            buildConfigField("String", "BASE_URL", properties['test.base.url'])
+            buildConfigField("String", "CLIENT_TOKEN", properties['test.client.token'])
+        }
+
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            buildConfigField("String", "BASE_URL", properties['release.base.url'])
+            buildConfigField("String", "CLIENT_TOKEN", properties['release.client.token'])
         }
     }
     compileOptions {
@@ -55,9 +69,9 @@ dependencies {
     implementation 'androidx.fragment:fragment-ktx:1.4.1'
 
     //coroutine
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2"
     //viewModel
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.2"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1"
 
     // Retrofit
@@ -76,18 +90,30 @@ dependencies {
     //Timber
     implementation "com.jakewharton.timber:timber:5.0.1"
 
-    //serialize
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2"
-
     //recyclerview state restoration policy
     implementation "androidx.recyclerview:recyclerview:1.2.1"
 
     //paging3
-    implementation "androidx.paging:paging-runtime:3.2.0-alpha01"
+    implementation "androidx.paging:paging-runtime-ktx:3.2.0-alpha01"
 
     //glide
     implementation 'com.github.bumptech.glide:glide:4.12.0'
 
     //recyclerview state restoration policy
     implementation "androidx.recyclerview:recyclerview:1.2.1"
+
+    //data store
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+
+
+    //test
+    //coroutine Test
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.2'
+
+    //kotlin test
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:1.6.21"
+
+    //web request test
+    testImplementation 'com.squareup.okhttp3:mockwebserver:4.0.0'
+    testImplementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.2'
 }

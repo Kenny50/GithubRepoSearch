@@ -1,3 +1,11 @@
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="row_item_margin_vertical">12dp</dimen>
+    <dimen name="error_text_size">24sp</dimen>
+    <dimen name="repo_name_size">24sp</dimen>
+    <dimen name="card_corner_radius">20dp</dimen>
+    <dimen name="vh_margin">10dp</dimen>
+    <dimen name="card_view_items_space">5dp</dimen>
+    <dimen name="vh_repo_title_size">50sp</dimen>
+    <dimen name="divide_height">1dp</dimen>
+    <dimen name="setting_title">30sp</dimen>
 </resources>

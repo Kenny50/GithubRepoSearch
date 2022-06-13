@@ -2,16 +2,17 @@
     <!-- Base application theme. -->
     <style name="Theme.GithubRepoSearch" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryVariant">@color/primaryLightColor</item>
+        <item name="colorOnPrimary">@color/primaryDarkColor</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondary">@color/secondaryColor</item>
+        <item name="colorSecondaryVariant">@color/secondaryLightColor</item>
+        <item name="colorOnSecondary">@color/secondaryDarkColor</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="android:textColor">@color/primaryTextColor</item>
     </style>
 
     <style name="Theme.GithubRepoSearch.NoActionBar">
@@ -19,7 +20,20 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.GithubRepoSearch.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Widget.MaterialComponents.CardView.VhRepo">
+        <item name="strokeColor">@color/primaryColor</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
 
-    <style name="Theme.GithubRepoSearch.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="ImgRoundedCorner">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
+    </style>
+
+    <style name="ImgRoundedCorner.TopRightCorner">
+        <item name="cornerFamilyTopRight">rounded</item>
+        <item name="cornerSize">@dimen/card_corner_radius</item>
+        <item name="cornerSizeTopRight">40dp</item>
+    </style>
+
 </resources>
